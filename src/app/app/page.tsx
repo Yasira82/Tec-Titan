@@ -1,70 +1,132 @@
 'use client';
 
-// Example protected page demonstrating the canonical ADR-007 dual-mode buy flow.
-// Copy this handler into your real product/checkout components.
+// TEC Titan — the Enterprise Operating Platform (Titan charter, draft). "How do
+// organizations operate in the Pi economy?" Titan is the B2B / institutional
+// counterpart to Life (Personal OS): an org manages identity, team + roles,
+// operations, commerce, procurement, and reputation on Pi. Titan COORDINATES;
+// it never holds funds (→ tec-payment-service), owns commerce (→ Commerce),
+// mints verification (→ Zone), or holds capital (→ FundX). This V1 is a curated
+// read-only console served by /api/bff/titan/console; real multi-tenant org
+// data is Phase 1+.
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { usePiAuth } from '@yasser172/tec-auth';
 import { TEC_COLORS } from '@yasser172/tec-ui';
+import { TitanPro } from './components/TitanPro';
 import {
-  isHubNavigation,
-  redirectToHubPayment,
-  createPaymentRecord,
-  createU2APayment,
-} from '@/lib/pi-payment';
+  ORG, TEAM, ROLE_META, MODULES, STATUS_META, type Module,
+} from '@/lib/titan/enterprise';
 
-// TODO(new app): replace with real items from your BFF (/api/bff/items).
-const DEMO_ITEM = { id: 'demo-1', name: 'Demo Item', price: 1 };
+export default function TitanHome() {
+  const { user, isLoading } = usePiAuth();
+  const name = user?.piUsername ? `@${user.piUsername}` : 'there';
 
-export default function AppHomePage() {
-  const [piReady, setPiReady] = useState(false);
-  const [status, setStatus]   = useState<string>('');
+  const [modules, setModules] = useState<Module[]>(MODULES);
+  const [source, setSource] = useState<'sample' | 'live'>('sample');
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    if ((window as { __TEC_PI_READY?: boolean }).__TEC_PI_READY) setPiReady(true);
-    const onReady = () => setPiReady(true);
-    window.addEventListener('tec-pi-ready', onReady);
-    return () => window.removeEventListener('tec-pi-ready', onReady);
+    let alive = true;
+    (async () => {
+      try {
+        const res  = await fetch('/api/bff/titan/console', { credentials: 'include' });
+        const data = await res.json().catch(() => null);
+        if (!alive || !data || !Array.isArray(data.modules)) return;
+        setModules(data.modules as Module[]);
+        setSource(data.source === 'live' ? 'live' : 'sample');
+      } catch { /* keep the sample console */ }
+    })();
+    return () => { alive = false; };
   }, []);
 
-  const handleBuy = async () => {
-    const { id, name, price } = DEMO_ITEM;
-
-    // ── ADR-007 guard — ALWAYS keep this before touching window.Pi ──
-    if (isHubNavigation() || !(window as { Pi?: unknown }).Pi || !piReady) {
-      redirectToHubPayment({ amount: price, itemId: id, memo: name });   // Mode 1
-      return;
-    }
-
-    // ── Mode 2: standalone Pi Browser payment ──
-    setStatus('Creating payment…');
-    const internalId = await createPaymentRecord(price, id, name);
-    if (!internalId) { setStatus('Could not start payment.'); return; }
-
-    setStatus('Awaiting Pi approval…');
-    const result = await createU2APayment(price, name, { item_id: id }, internalId);
-    setStatus(
-      result.success ? `✅ Paid — txid ${result.txid}` :
-      result.status === 'cancelled' ? 'Payment cancelled.' :
-      `❌ ${result.message ?? 'Payment failed.'}`,
-    );
-    // On success, create the domain record: POST /api/bff/items { ..., payment_id: internalId }
+  const card: React.CSSProperties = {
+    background: TEC_COLORS.surface, border: `1px solid ${TEC_COLORS.gold}22`,
+    borderRadius: 12, padding: 14,
   };
+  const toneColor = (tone: 'good' | 'mid' | 'low') =>
+    tone === 'good' ? TEC_COLORS.success : tone === 'mid' ? TEC_COLORS.gold : TEC_COLORS.subtext;
+  const vTone = ORG.verification === 'verified' ? TEC_COLORS.success : ORG.verification === 'pending' ? TEC_COLORS.gold : TEC_COLORS.subtext;
 
   return (
-    <main style={{ minHeight: '100vh', background: TEC_COLORS.bg, color: '#e7e7ea', padding: 32, fontFamily: 'system-ui, sans-serif' }}>
-      <h1 style={{ color: TEC_COLORS.gold }}>TEC App</h1>
-      <p style={{ opacity: 0.7 }}>Pi SDK: {piReady ? 'ready' : 'loading…'}</p>
+    <main style={{ minHeight: '100vh', background: TEC_COLORS.bg, color: TEC_COLORS.text, padding: '32px 22px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+      <div style={{ maxWidth: 780, margin: '0 auto' }}>
+        <header>
+          <div style={{ fontSize: 12, letterSpacing: 1, color: TEC_COLORS.subtext, textTransform: 'uppercase' }}>TEC Titan · Enterprise OS</div>
+          <h1 style={{ fontSize: 26, fontWeight: 900, color: TEC_COLORS.gold, margin: '6px 0 0' }}>
+            {isLoading ? 'Enterprise console' : `Welcome, ${name}`}
+          </h1>
+          <p style={{ fontSize: 14, color: TEC_COLORS.subtext, margin: '6px 0 0', lineHeight: 1.6 }}>
+            The Enterprise Operating Platform of TEC — organizations manage identity,
+            team, operations, commerce, and reputation on Pi. Life is the Personal OS;
+            <strong style={{ color: TEC_COLORS.text }}> Titan is the Enterprise OS.</strong>
+          </p>
+        </header>
 
-      <div style={{ marginTop: 24, padding: 20, background: TEC_COLORS.surface, borderRadius: 12, maxWidth: 360 }}>
-        <h2 style={{ margin: 0 }}>{DEMO_ITEM.name}</h2>
-        <p style={{ color: TEC_COLORS.gold }}>π {DEMO_ITEM.price}</p>
-        <button
-          onClick={handleBuy}
-          style={{ background: TEC_COLORS.goldDark, color: '#020205', border: 'none', borderRadius: 8, padding: '10px 18px', fontWeight: 700, cursor: 'pointer' }}
-        >
-          Buy with Pi
-        </button>
-        {status && <p style={{ marginTop: 12 }}>{status}</p>}
+        {/* Org card — a read-only sample org (verification presented from Zone). */}
+        <section style={{ ...card, marginTop: 22 }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 8, flexWrap: 'wrap' }}>
+            <div>
+              <div style={{ fontSize: 16, fontWeight: 900, color: TEC_COLORS.text }}>🏛️ {ORG.name}</div>
+              <div style={{ fontSize: 12, color: TEC_COLORS.gold, marginTop: 2 }}>{ORG.kind} · {ORG.members} members · {ORG.branches} branches · since {ORG.since}</div>
+            </div>
+            <span style={{ fontSize: 11, fontWeight: 800, whiteSpace: 'nowrap', color: vTone, border: `1px solid ${vTone}55`, borderRadius: 999, padding: '3px 10px' }}>
+              {ORG.verification === 'verified' ? '✅ Zone Verified' : ORG.verification === 'pending' ? 'Verification pending' : 'Unverified'}
+            </span>
+          </div>
+        </section>
+
+        {/* Titan Enterprise — real Pi U2A payment (org subscription). */}
+        <TitanPro />
+
+        {/* Team + roles */}
+        <section style={{ marginTop: 28 }}>
+          <h2 style={{ fontSize: 16, fontWeight: 800, color: TEC_COLORS.text, margin: 0 }}>Team &amp; roles</h2>
+          <p style={{ fontSize: 12, color: TEC_COLORS.subtext, margin: '6px 0 12px', lineHeight: 1.5 }}>
+            Multi-user management — role scopes are enforced server-side (tec-auth) at
+            runtime; presented here read-only.
+          </p>
+          <div style={{ display: 'grid', gap: 10 }}>
+            {TEAM.map((m) => (
+              <div key={m.handle} style={card}>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 8 }}>
+                  <span style={{ fontSize: 13, fontWeight: 800, color: TEC_COLORS.text }}>{m.handle}</span>
+                  <span style={{ fontSize: 11, fontWeight: 800, color: TEC_COLORS.gold, border: `1px solid ${TEC_COLORS.gold}44`, borderRadius: 999, padding: '2px 8px', whiteSpace: 'nowrap' }}>{ROLE_META[m.role].icon} {m.role}</span>
+                </div>
+                <div style={{ fontSize: 12, color: TEC_COLORS.subtext, marginTop: 5, lineHeight: 1.5 }}>{m.scope}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Enterprise modules — each names its owning system. */}
+        <section style={{ marginTop: 28 }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+            <h2 style={{ fontSize: 16, fontWeight: 800, color: TEC_COLORS.text, margin: 0 }}>Enterprise modules</h2>
+            <span style={{ fontSize: 11, color: TEC_COLORS.subtext, border: `1px solid ${TEC_COLORS.gold}33`, borderRadius: 999, padding: '2px 10px' }}>
+              {source === 'live' ? 'live console' : 'sample console'}
+            </span>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 10, marginTop: 12 }}>
+            {modules.map((mod) => {
+              const st = STATUS_META[mod.status];
+              return (
+                <Link key={mod.id} href={`/module/${mod.id}`} style={{ ...card, display: 'block', textDecoration: 'none' }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 8 }}>
+                    <span style={{ fontSize: 13, fontWeight: 800, color: TEC_COLORS.text }}>{mod.icon} {mod.title}</span>
+                    <span style={{ fontSize: 9, fontWeight: 800, whiteSpace: 'nowrap', color: toneColor(st.tone), border: `1px solid ${toneColor(st.tone)}55`, borderRadius: 999, padding: '2px 7px' }}>{st.label}</span>
+                  </div>
+                  <div style={{ fontSize: 12, color: TEC_COLORS.subtext, marginTop: 5, lineHeight: 1.5 }}>{mod.summary}</div>
+                  <div style={{ fontSize: 11, color: TEC_COLORS.gold, marginTop: 6 }}>owner: {mod.ownedBy}</div>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+
+        <p style={{ fontSize: 11, color: TEC_COLORS.subtext, margin: '24px 0 0', lineHeight: 1.5 }}>
+          Titan coordinates the organization; it does NOT hold funds (→ tec-payment-service),
+          own commerce (→ Commerce), hold capital (→ FundX), own assets (→ Assets), or mint
+          verification (→ Zone/kyc). The org wallet is a managed VIEW, never a new wallet.
+        </p>
       </div>
     </main>
   );
