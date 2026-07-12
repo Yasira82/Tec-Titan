@@ -1,15 +1,68 @@
-# TEC Domain App Template — Claude Code Instructions
+# TEC Titan — Claude Code Instructions
 
-## What This Repo Is
+> ⚡ **SESSION START:** اقرأ `knowledge-base/C-02___CURRENT_STATE_.md` من `yasira82/tec-knowledge-base`.
+> **Titan charter is [Draft]** — the constitutional definition below is the reference until a formal C-doc lands.
 
-The **golden starter template** for a new app in the TEC Federated Platform.
-It ships a correct, Portal-ready skeleton: Hub SSO, dual-mode Pi payments,
-CSRF, legal pages, and CI policy guards. Clone it, run the "New app setup"
-checklist below, and you have a compliant app — no missing pieces.
+## What This App Is
 
-**Reference of record:** `yasira82/tec-knowledge-base` — especially
-`C-12_Dual_Mode_Payment.md` (payment + anti-regression) and
-`audits/PORTAL_SUBMISSION_RUNBOOK_*.md`.
+**The Enterprise Operating Platform** of TEC. Titan answers one question:
+
+```
+"How do organizations operate in the Pi economy?"
+```
+
+> **Constitutional definition (draft):** *Titan is the Enterprise Operating Platform of
+> TEC. It enables organizations to manage identity, operations, commerce, assets,
+> payments, governance, and collaboration across the Pi Economy.*
+
+Titan is the **B2B / institutional** counterpart to **Life (Personal OS)**:
+- **Life** manages the individual in the Pi economy.
+- **Titan** manages the organization (companies, factories, universities, NGOs,
+  government, large investors) in the Pi economy.
+
+It serves organizations — **not** the individual user — with: business verification,
+enterprise workspace (team · roles · branches), organization wallet, multi-user
+management (Owner/Admin/Finance/Sales/HR), enterprise (B2B) commerce, procurement,
+corporate analytics, and business reputation.
+
+Built from `tec-template-base` (Next.js 15 frontend).
+
+**Current Phase: Titan V0/V1 — Enterprise console (read-only).** Identity / domain /
+slug / legal + a read-only console (org profile + verification, team + roles, and an
+enterprise-modules map that names each **owning system**) + a `/module/[id]` detail
+page + **Titan Enterprise** (the Pi Portal "Process a Transaction" gate). Real
+multi-tenant org data is Phase 1+ (needs a mature platform). Not yet deployed.
+
+---
+
+## Pi App Identity
+
+| Field | Value |
+|-------|-------|
+| **App** | TEC Titan |
+| **Domain** | `https://titan.tecosystem.app` |
+| **Pi App ID** | ⏳ TBD — register at Pi Developer Portal · then Vercel `NEXT_PUBLIC_PI_APP_ID` |
+| **APP_SOURCE slug** | `titan` (payment-service resolves `PI_API_KEY_TITAN`) |
+| **PI_SANDBOX** | `false` (Mainnet) |
+
+---
+
+## Titan-Specific Rules (the boundary — Titan coordinates, it does NOT own)
+Titan **OWNS**: the enterprise/org identity context, team + roles (multi-user),
+workspace/branches, procurement UI, and the console that orchestrates the owning
+apps for an org. Titan does **NOT OWN**:
+- **Funds** → `tec-payment-service`. The **Organization Wallet is a managed VIEW**, never a new wallet.
+- **Commerce** → Commerce (Enterprise Commerce is a **B2B context** over it). **Assets** → tec-asset-service.
+- **Capital / financing** → FundX (C-113). **Verification** → Zone (C-120) / tec-kyc-service (presented, never minted).
+- **Reputation** → Zone + Connection (C-107). **Reports** → Analytics (C-105).
+
+### Isolation (P6)
+Org identity + role scope derive from the `tec_user` session cookie server-side —
+**never** from a request body/param. Role permissions are enforced server-side
+(tec-auth) at runtime; the console only presents them. No session → fail closed.
+
+**Reference of record:** `yasira82/tec-knowledge-base` — `C-12_Dual_Mode_Payment.md`
+(payment anti-regression) · `C-123` (session/cookies) · Zone/Connection/Commerce/FundX charters.
 
 ---
 
