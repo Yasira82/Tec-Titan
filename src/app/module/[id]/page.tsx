@@ -6,10 +6,14 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { TEC_COLORS } from '@yasser172/tec-ui';
 import { getModule, MODULES, STATUS_META } from '@/lib/titan/enterprise';
+import { resolveModule } from '@/lib/titan/server';
 
+// Pre-render the curated module ids; allow live-only backend modules to render on
+// demand (the Titan read-layer is the module map of record — Titan charter).
 export function generateStaticParams() {
   return MODULES.map((m) => ({ id: m.id }));
 }
+export const dynamicParams = true;
 
 export async function generateMetadata(
   { params }: { params: Promise<{ id: string }> },
@@ -26,7 +30,9 @@ export default async function ModulePage(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const m = getModule(id);
+  // Resolve from the live Titan read-layer; fall back to the curated sample so the
+  // page never 500s. A live 404 is authoritative → "not found".
+  const { module: m } = await resolveModule(id);
 
   const wrap: React.CSSProperties = {
     minHeight: '100vh', background: TEC_COLORS.bg, color: TEC_COLORS.text,

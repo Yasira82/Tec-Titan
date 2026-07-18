@@ -14,13 +14,18 @@ import { usePiAuth } from '@yasser172/tec-auth';
 import { TEC_COLORS } from '@yasser172/tec-ui';
 import { TitanPro } from './components/TitanPro';
 import {
-  ORG, TEAM, ROLE_META, MODULES, STATUS_META, type Module,
+  ORG, TEAM, ROLE_META, MODULES, STATUS_META, type Module, type Org, type Member,
 } from '@/lib/titan/enterprise';
 
 export default function TitanHome() {
   const { user, isLoading } = usePiAuth();
   const name = user?.piUsername ? `@${user.piUsername}` : 'there';
 
+  // The caller's OWN console (org + team) + the global module map — fetched from the
+  // BFF (identity from the session cookie, P6), falling back to the curated sample so
+  // the console is never blank.
+  const [org,     setOrg]     = useState<Org>(ORG);
+  const [team,    setTeam]    = useState<Member[]>(TEAM);
   const [modules, setModules] = useState<Module[]>(MODULES);
   const [source, setSource] = useState<'sample' | 'live'>('sample');
 
@@ -31,6 +36,8 @@ export default function TitanHome() {
         const res  = await fetch('/api/bff/titan/console', { credentials: 'include' });
         const data = await res.json().catch(() => null);
         if (!alive || !data || !Array.isArray(data.modules)) return;
+        if (data.org) setOrg(data.org as Org);
+        if (Array.isArray(data.team)) setTeam(data.team as Member[]);
         setModules(data.modules as Module[]);
         setSource(data.source === 'live' ? 'live' : 'sample');
       } catch { /* keep the sample console */ }
@@ -44,7 +51,7 @@ export default function TitanHome() {
   };
   const toneColor = (tone: 'good' | 'mid' | 'low') =>
     tone === 'good' ? TEC_COLORS.success : tone === 'mid' ? TEC_COLORS.gold : TEC_COLORS.subtext;
-  const vTone = ORG.verification === 'verified' ? TEC_COLORS.success : ORG.verification === 'pending' ? TEC_COLORS.gold : TEC_COLORS.subtext;
+  const vTone = org.verification === 'verified' ? TEC_COLORS.success : org.verification === 'pending' ? TEC_COLORS.gold : TEC_COLORS.subtext;
 
   return (
     <main style={{ minHeight: '100vh', background: TEC_COLORS.bg, color: TEC_COLORS.text, padding: '32px 22px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
@@ -65,11 +72,11 @@ export default function TitanHome() {
         <section style={{ ...card, marginTop: 22 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 8, flexWrap: 'wrap' }}>
             <div>
-              <div style={{ fontSize: 16, fontWeight: 900, color: TEC_COLORS.text }}>🏛️ {ORG.name}</div>
-              <div style={{ fontSize: 12, color: TEC_COLORS.gold, marginTop: 2 }}>{ORG.kind} · {ORG.members} members · {ORG.branches} branches · since {ORG.since}</div>
+              <div style={{ fontSize: 16, fontWeight: 900, color: TEC_COLORS.text }}>🏛️ {org.name}</div>
+              <div style={{ fontSize: 12, color: TEC_COLORS.gold, marginTop: 2 }}>{org.kind} · {org.members} members · {org.branches} branches · since {org.since}</div>
             </div>
             <span style={{ fontSize: 11, fontWeight: 800, whiteSpace: 'nowrap', color: vTone, border: `1px solid ${vTone}55`, borderRadius: 999, padding: '3px 10px' }}>
-              {ORG.verification === 'verified' ? '✅ Zone Verified' : ORG.verification === 'pending' ? 'Verification pending' : 'Unverified'}
+              {org.verification === 'verified' ? '✅ Zone Verified' : org.verification === 'pending' ? 'Verification pending' : 'Unverified'}
             </span>
           </div>
         </section>
@@ -85,7 +92,7 @@ export default function TitanHome() {
             runtime; presented here read-only.
           </p>
           <div style={{ display: 'grid', gap: 10 }}>
-            {TEAM.map((m) => (
+            {team.map((m) => (
               <div key={m.handle} style={card}>
                 <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 8 }}>
                   <span style={{ fontSize: 13, fontWeight: 800, color: TEC_COLORS.text }}>{m.handle}</span>
