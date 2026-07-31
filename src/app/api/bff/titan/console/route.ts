@@ -7,7 +7,7 @@ import { resolveConsole } from '@/lib/titan/server';
 // organization from the backend (identity from the `tec_user` session cookie
 // server-side — NEVER a param, P6): org profile + verification (Zone), team + roles
 // (tec-auth), and the module map. Returns source:'live'; falls back to the curated
-// sample (source:'sample') if the backend is unreachable. Titan never owns
+// definitional catalog (org/team null) if the backend is unreachable — never a fabricated org (C-135 §4). Titan never owns
 // funds/commerce/assets/verification. NEW-A: gateway URL is server-only.
 function ownerFromSession(req: NextRequest): string | null {
   try {

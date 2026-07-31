@@ -1,13 +1,14 @@
 import {
-  ORG, TEAM, MODULES, getModule,
+  MODULES, getModule,
   type Org, type VerificationStatus, type Member, type Role, type Module,
 } from './enterprise';
 
 // Server-only Titan backend access (Titan charter). Calls the real Titan read-layer
 // (identity-service) via the gateway with the inter-service key, and maps the
-// backend rows to the frontend shape. Everything degrades to the curated sample so
-// the console is never blank / never 500s. NEW-A: the gateway URL is server-only
-// (API_GATEWAY_URL) — never shipped to the client.
+// backend rows to the frontend shape. Real data end-to-end (C-135 §4): the org +
+// team are the user's OWN data (null/empty unless live — never a fabricated sample);
+// the enterprise-modules map is Titan's definitional catalog. NEW-A: the gateway URL
+// is server-only (API_GATEWAY_URL) — never shipped to the client.
 const GW = process.env.API_GATEWAY_URL ?? '';
 
 const gwHeaders = () => ({
@@ -43,15 +44,16 @@ export function moduleFromBackend(m: Record<string, unknown>): Module {
 }
 
 export interface ResolvedConsole {
-  org:     Org | null;
-  team:    Member[];
-  modules: Module[];
-  source:  'live' | 'sample';
+  org:     Org | null;      // the caller's OWN org — null unless live
+  team:    Member[];        // the caller's OWN team — empty unless live
+  modules: Module[];        // Titan's definitional enterprise-modules catalog
+  source:  'live' | 'catalog';
 }
 
-// The caller's console (org + team + module map) — live backend first, curated
-// sample as fallback. `owner` is derived from the session by the BFF (never a client
-// param, P6); the gateway placeholder '-' means no session (null org + catalog).
+// The caller's console (own org + team) over the enterprise-modules catalog. Real
+// data end-to-end (C-135 §4): org + team are the user's OWN data — null/empty unless
+// the live backend returns them (never a fabricated sample). The modules map is
+// Titan's definitional catalog (shown always). `owner` from the session (P6).
 export async function resolveConsole(owner: string | null): Promise<ResolvedConsole> {
   if (GW) {
     try {
@@ -69,15 +71,16 @@ export async function resolveConsole(owner: string | null): Promise<ResolvedCons
           };
         }
       }
-    } catch { /* fall through to the curated sample */ }
+    } catch { /* fall through to the definitional catalog (org/team unknown) */ }
   }
-  return { org: ORG, team: TEAM, modules: MODULES, source: 'sample' };
+  return { org: null, team: [], modules: MODULES, source: 'catalog' };
 }
 
-export interface ResolvedModule { module: Module | null; source: 'live' | 'sample'; }
+export interface ResolvedModule { module: Module | null; source: 'live' | 'catalog'; }
 
-// One module by id — live backend first, sample fallback. A live 404 is
-// authoritative (module: null, source: 'live').
+// One module by id from the definitional catalog — live backend first, local catalog
+// otherwise (the modules map is Titan's own product content, not user data). A live
+// 404 is authoritative (module: null, source: 'live').
 export async function resolveModule(id: string): Promise<ResolvedModule> {
   if (GW) {
     try {
@@ -89,7 +92,7 @@ export async function resolveModule(id: string): Promise<ResolvedModule> {
         if (m) return { module: moduleFromBackend(m as Record<string, unknown>), source: 'live' };
       }
       if (res.status === 404) return { module: null, source: 'live' };
-    } catch { /* fall through to the curated sample */ }
+    } catch { /* fall through to the definitional catalog */ }
   }
-  return { module: getModule(id), source: 'sample' };
+  return { module: getModule(id), source: 'catalog' };
 }
