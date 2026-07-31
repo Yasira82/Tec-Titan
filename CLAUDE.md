@@ -31,7 +31,7 @@ Built from `tec-template-base` (Next.js 15 frontend).
 slug / legal + a read-only console (org profile + verification, team + roles, and an
 enterprise-modules map that names each **owning system**) + a `/module/[id]` detail
 page + **Titan Enterprise** (the Pi Portal "Process a Transaction" gate). Real
-multi-tenant org data is Phase 1+ (needs a mature platform). Not yet deployed.
+multi-tenant org data is Phase 1+ (needs a mature platform). Deployed (Mainnet) · Pi App ID registered · env set · payment live · referral growth loop wired (C-133).
 
 ---
 
@@ -41,7 +41,7 @@ multi-tenant org data is Phase 1+ (needs a mature platform). Not yet deployed.
 |-------|-------|
 | **App** | TEC Titan |
 | **Domain** | `https://titan.tecosystem.app` |
-| **Pi App ID** | ⏳ TBD — register at Pi Developer Portal · then Vercel `NEXT_PUBLIC_PI_APP_ID` |
+| **Pi App ID** | ✅ Registered (Mainnet) · Vercel `NEXT_PUBLIC_PI_APP_ID` |
 | **APP_SOURCE slug** | `titan` (payment-service resolves `PI_API_KEY_TITAN`) |
 | **PI_SANDBOX** | `false` (Mainnet) |
 

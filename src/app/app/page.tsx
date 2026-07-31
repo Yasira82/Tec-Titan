@@ -9,6 +9,7 @@
 // read-only console served by /api/bff/titan/console; real multi-tenant org
 // data is Phase 1+.
 import Link from 'next/link';
+import { InviteCard } from '@/components/referral/InviteCard';
 import { useEffect, useState } from 'react';
 import { usePiAuth } from '@yasser172/tec-auth';
 import { TEC_COLORS } from '@yasser172/tec-ui';
@@ -150,6 +151,7 @@ export default function TitanHome() {
           own commerce (→ Commerce), hold capital (→ FundX), own assets (→ Assets), or mint
           verification (→ Zone/kyc). The org wallet is a managed VIEW, never a new wallet.
         </p>
+        <InviteCard />
       </div>
     </main>
   );
