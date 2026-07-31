@@ -5,15 +5,13 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { TEC_COLORS } from '@yasser172/tec-ui';
-import { getModule, MODULES, STATUS_META } from '@/lib/titan/enterprise';
+import { getModule, STATUS_META } from '@/lib/titan/enterprise';
 import { resolveModule } from '@/lib/titan/server';
 
-// Pre-render the curated module ids; allow live-only backend modules to render on
-// demand (the Titan read-layer is the module map of record — Titan charter).
-export function generateStaticParams() {
-  return MODULES.map((m) => ({ id: m.id }));
-}
-export const dynamicParams = true;
+// Rendered dynamically from the live Titan read-layer (resolveModule does a no-store
+// gateway fetch); the enterprise-modules map is Titan's definitional catalog, with
+// the local catalog as the offline copy. A live 404 is authoritative → notFound().
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(
   { params }: { params: Promise<{ id: string }> },
@@ -82,7 +80,7 @@ export default async function ModulePage(
         <p style={{ fontSize: 11, color: TEC_COLORS.subtext, margin: '20px 0 0', lineHeight: 1.5 }}>
           Titan is the Enterprise OS — it coordinates identity, team/roles, and org
           operations, and orchestrates the owning apps. It never holds funds, owns
-          commerce/assets, or mints verification. This is a read-only sample console.
+          commerce/assets, or mints verification.
         </p>
       </div>
     </main>
