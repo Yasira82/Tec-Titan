@@ -147,9 +147,9 @@ export default function TitanHome() {
         </section>
 
         <p style={{ fontSize: 11, color: TEC_COLORS.subtext, margin: '24px 0 0', lineHeight: 1.5 }}>
-          Titan coordinates the organization; it does NOT hold funds (→ tec-payment-service),
-          own commerce (→ Commerce), hold capital (→ FundX), own assets (→ Assets), or mint
-          verification (→ Zone/kyc). The org wallet is a managed VIEW, never a new wallet.
+          Titan brings your whole organization together in one place. Funds, commerce,
+          assets, and verification are handled securely by their dedicated systems —
+          the organization wallet is a view of your funds, not a separate wallet.
         </p>
         <InviteCard />
       </div>
