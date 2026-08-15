@@ -63,15 +63,15 @@ export interface Module {
 }
 
 export const MODULES: Module[] = [
-  { id: 'verification', icon: '🛡️', title: 'Business Verification', summary: 'Company profile, documents, certificates — the org’s verified status.', ownedBy: 'Zone (C-120) + tec-kyc-service', status: 'view' },
+  { id: 'verification', icon: '🛡️', title: 'Business Verification', summary: 'Company profile, documents, certificates — the org’s verified status.', ownedBy: 'Zone + tec-kyc-service', status: 'view' },
   { id: 'workspace',    icon: '🏢', title: 'Enterprise Workspace', summary: 'Dashboard, team, permissions, and branches for the organization.', ownedBy: 'Titan (identity via Hub)', status: 'planned' },
   { id: 'org-wallet',   icon: '👛', title: 'Organization Wallet', summary: 'A managed VIEW over the org’s Pi payments — Titan never holds funds.', ownedBy: 'tec-payment-service', status: 'view' },
   { id: 'team',         icon: '👥', title: 'Multi-user Management', summary: 'Owner / Admin / Finance / Sales / HR roles + scoped permissions.', ownedBy: 'Titan + tec-auth (roles)', status: 'planned' },
-  { id: 'b2b-commerce', icon: '🤝', title: 'Enterprise Commerce (B2B)', summary: 'Company-to-company buying and selling — a B2B context over Commerce.', ownedBy: 'Commerce (C-101/103)', status: 'live-elsewhere' },
+  { id: 'b2b-commerce', icon: '🤝', title: 'Enterprise Commerce (B2B)', summary: 'Company-to-company buying and selling — a B2B context over Commerce.', ownedBy: 'Commerce', status: 'live-elsewhere' },
   { id: 'procurement',  icon: '📦', title: 'Procurement', summary: 'Purchase requests, suppliers, and tenders for the organization.', ownedBy: 'Titan + Commerce', status: 'planned' },
-  { id: 'analytics',    icon: '📊', title: 'Corporate Analytics', summary: 'Organization-level reports and insights.', ownedBy: 'Analytics (C-105)', status: 'live-elsewhere' },
-  { id: 'reputation',   icon: '⭐', title: 'Business Reputation', summary: 'Trust + reputation derived from real activity and relationships.', ownedBy: 'Zone (C-120) + Connection (C-107)', status: 'view' },
-  { id: 'financing',    icon: '💸', title: 'Enterprise Financing', summary: 'Capital / pooled investment for the organization.', ownedBy: 'FundX (C-113)', status: 'live-elsewhere' },
+  { id: 'analytics', icon: '📊', title: 'Corporate Analytics', summary: 'Organization-level reports and insights.', ownedBy: 'Analytics', status: 'live-elsewhere' },
+  { id: 'reputation', icon: '⭐', title: 'Business Reputation', summary: 'Trust + reputation derived from real activity and relationships.', ownedBy: 'Zone + Connection', status: 'view' },
+  { id: 'financing', icon: '💸', title: 'Enterprise Financing', summary: 'Capital / pooled investment for the organization.', ownedBy: 'FundX', status: 'live-elsewhere' },
   { id: 'assets',       icon: '💎', title: 'Corporate Assets', summary: 'Digital assets / holdings owned by the organization.', ownedBy: 'Assets (tec-asset-service)', status: 'live-elsewhere' },
 ];
 
