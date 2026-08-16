@@ -20,7 +20,7 @@ import {
 
 export default function TitanHome() {
   const { user, isLoading } = usePiAuth();
-  const name = user?.piUsername ? `@${user.piUsername}` : 'there';
+  const name = user?.piUsername ? `@${user.piUsername}` : '';
 
   // Real data end-to-end (C-135 §4): the org + team are the caller's OWN data (null/
   // empty unless live — never a fabricated sample); the enterprise-modules map is
@@ -62,7 +62,7 @@ export default function TitanHome() {
         <header>
           <div style={{ fontSize: 12, letterSpacing: 1, color: TEC_COLORS.subtext, textTransform: 'uppercase' }}>TEC Titan · Enterprise OS</div>
           <h1 style={{ fontSize: 26, fontWeight: 900, color: TEC_COLORS.gold, margin: '6px 0 0' }}>
-            {isLoading ? 'Enterprise console' : `Welcome, ${name}`}
+            {isLoading || !name ? 'Enterprise console' : `Welcome, ${name}`}
           </h1>
           <p style={{ fontSize: 14, color: TEC_COLORS.subtext, margin: '6px 0 0', lineHeight: 1.6 }}>
             The Enterprise Operating Platform of TEC — organizations manage identity,
