@@ -161,8 +161,8 @@ export function TitanPro() {
       </div>
       <div style={{ fontSize: 12, color: TEC_COLORS.subtext, marginTop: 8, lineHeight: 1.5 }}>
         For organizations — team seats, roles, branches, corporate analytics, and
-        procurement. Titan coordinates; it never holds funds (→ tec-payment-service),
-        owns commerce (→ Commerce), or mints verification (→ Zone).
+        procurement. Titan brings your organization together in one place — funds, commerce, and
+        verification are handled securely by their dedicated systems.
       </div>
 
       <button

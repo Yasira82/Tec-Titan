@@ -72,15 +72,15 @@ export default async function ModulePage(
             {m.status === 'live-elsewhere'
               ? 'This capability is owned and run by another TEC app. Titan presents it in the enterprise (org) context and routes you there — it does not re-implement it.'
               : m.status === 'view'
-              ? 'Titan presents a managed VIEW over the owning system for the organization — it never owns the underlying data (e.g. funds stay in tec-payment-service).'
+              ? 'Titan shows your organization a unified view — the underlying data stays securely in its own system (for example, funds stay in the payment system).'
               : 'Planned for a future Titan phase — organizations need a mature platform first. Presented here so the enterprise scope is explicit.'}
           </div>
         </div>
 
         <p style={{ fontSize: 11, color: TEC_COLORS.subtext, margin: '20px 0 0', lineHeight: 1.5 }}>
-          Titan is the Enterprise OS — it coordinates identity, team/roles, and org
-          operations, and orchestrates the owning apps. It never holds funds, owns
-          commerce/assets, or mints verification.
+          Titan brings your organization together — identity, team and roles, and
+          operations in one place. Funds, commerce, assets, and verification are handled
+          securely by their dedicated systems.
         </p>
       </div>
     </main>
