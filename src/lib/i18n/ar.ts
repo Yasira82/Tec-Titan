@@ -22,4 +22,20 @@ export const ar = {
     appsTitle: 'منظومة TEC',
     appsCount: '24 تطبيق',
   },
+  titan: {
+    brand:       'TEC Titan · نظام المؤسسات',
+    welcome:     'كونسول المؤسسة',
+    welcomeName: 'أهلاً، {name}',
+    subtitle:    'منصة تشغيل المؤسسات في TEC — المؤسسات بتدير الهوية والفريق والعمليات والتجارة والسمعة على Pi. Life هو نظام الأفراد؛ Titan هو نظام المؤسسات.',
+    nav: { home: 'الرئيسية', modules: 'الوحدات', pro: 'Pro', settings: 'الإعدادات' },
+    modulesHeading: 'وحدات المؤسسة',
+    footer:      'Titan بيجمع مؤسستك كلها في مكان واحد. الأموال والتجارة والأصول والتوثيق بتتدار بأمان بأنظمتها المخصّصة — محفظة المؤسسة هي عرض لأموالك، مش محفظة منفصلة.',
+    settings: {
+      profile: 'الملف الشخصي', planFree: 'مجاني', planPro: 'Pro',
+      connectedPi: 'متصل بـ Pi', notSignedIn: 'غير مسجّل الدخول', member: 'عضو TEC',
+      appearance: 'المظهر', language: 'اللغة', languageDesc: 'لغة العرض',
+      about: 'حول', version: 'الإصدار', domain: 'النطاق', ecosystem: 'المنظومة',
+      builtOn: 'مبني على', builtOnPi: 'شبكة Pi', logout: 'تسجيل الخروج',
+    },
+  },
 };

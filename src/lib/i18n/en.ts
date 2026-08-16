@@ -22,4 +22,20 @@ export const en = {
     appsTitle: 'TEC Ecosystem',
     appsCount: '24 Apps',
   },
+  titan: {
+    brand:       'TEC Titan · Enterprise OS',
+    welcome:     'Enterprise console',
+    welcomeName: 'Welcome, {name}',
+    subtitle:    'The Enterprise Operating Platform of TEC — organizations manage identity, team, operations, commerce, and reputation on Pi. Life is the Personal OS; Titan is the Enterprise OS.',
+    nav: { home: 'Home', modules: 'Modules', pro: 'Pro', settings: 'Settings' },
+    modulesHeading: 'Enterprise modules',
+    footer:      'Titan brings your whole organization together in one place. Funds, commerce, assets, and verification are handled securely by their dedicated systems — the organization wallet is a view of your funds, not a separate wallet.',
+    settings: {
+      profile: 'Profile', planFree: 'Free', planPro: 'Pro',
+      connectedPi: 'Connected to Pi', notSignedIn: 'Not signed in', member: 'TEC Member',
+      appearance: 'Appearance', language: 'Language', languageDesc: 'Display language',
+      about: 'About', version: 'Version', domain: 'Domain', ecosystem: 'Ecosystem',
+      builtOn: 'Built on', builtOnPi: 'Pi Network', logout: 'Logout',
+    },
+  },
 };
