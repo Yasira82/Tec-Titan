@@ -15,7 +15,24 @@ import {
 } from '@/lib/pi-payment';
 
 const PRICE   = 25;                        // π / month
-const ITEM_ID = 'titan_enterprise_monthly';
+// The PLATFORM plan this buys is PRO. "Titan Enterprise" stays the product name
+// shown to the buyer — it is this app's own tier — but the machine key must name
+// the plan commerce will actually grant, and that is not the same word.
+//
+// It used to read `titan_enterprise_monthly`, which commerce resolves to the
+// ENTERPRISE plan. ENTERPRISE carries a 50π activation floor (a dust payment
+// tagged `_enterprise_monthly` must not buy a 50π tier), so every 25π purchase
+// here was REJECTED and recorded PAST_DUE: the Pi moved and nothing was granted.
+//
+// Raising the price to 50π would have cleared the floor and been the wrong fix.
+// Nothing on this platform enforces ENTERPRISE: every app reads
+// `plan === 'PRO' || plan === 'ENTERPRISE'` into one boolean, and the extra
+// features listed against ENTERPRISE are display strings with no mechanism
+// behind them. Selling a tier the platform cannot enforce is the same failure
+// as selling one that never activates — the buyer pays more and receives the
+// identical entitlement. ENTERPRISE becomes sellable when per-tier capability
+// gating exists (SYSTEM, C-110 P0-1), and that is an ADR, not a rename.
+const ITEM_ID = 'titan_pro_monthly';
 const MEMO    = 'TEC Titan — Enterprise (1 month)';
 
 const asText = (v: unknown): string => {
@@ -99,7 +116,7 @@ export function TitanPro() {
         return;
       }
       setStatus('paying');
-      const result = await createU2APayment(PRICE, MEMO, { item_id: ITEM_ID, plan: 'titan_enterprise' }, internalId);
+      const result = await createU2APayment(PRICE, MEMO, { item_id: ITEM_ID, plan: 'titan_pro' }, internalId);
       if (result.success && result.status === 'completed') {
         setStatus('success');
       } else if (result.status === 'cancelled') {
