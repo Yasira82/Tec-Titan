@@ -29,6 +29,12 @@ export const en = {
     subtitle:    'The Enterprise Operating Platform of TEC — organizations manage identity, team, operations, commerce, and reputation on Pi. Life is the Personal OS; Titan is the Enterprise OS.',
     nav: { home: 'Home', modules: 'Modules', pro: 'Pro', settings: 'Settings' },
     modulesHeading: 'Enterprise modules',
+    // C10 — "no session" and "no organization yet" are different states.
+    orgEmpty: {
+      heading:   'Your organization',
+      signedOut: 'Sign in with Pi to load your organization, team and roles. The Modules tab shows what Titan coordinates and which system owns each capability.',
+      noOrg:     'You have no organization in Titan yet. Creating one is not open yet — the Modules tab shows what Titan will coordinate and which system owns each capability.',
+    },
     footer:      'Titan brings your whole organization together in one place. Funds, commerce, assets, and verification are handled securely by their dedicated systems — the organization wallet is a view of your funds, not a separate wallet.',
     settings: {
       profile: 'Profile', planFree: 'Free', planPro: 'Pro',

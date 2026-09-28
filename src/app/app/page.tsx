@@ -27,6 +27,7 @@ export default function TitanHome() {
 
   const piName = me.username ?? user?.piUsername ?? null;
   const name = piName ? `@${piName}` : '';
+  const signedIn = me.authenticated || Boolean(piName);
 
   // Real data end-to-end (C-135 §4): the org + team are the caller's OWN data (null/
   // empty unless live); the enterprise-modules map is Titan's definitional catalog.
@@ -95,11 +96,14 @@ export default function TitanHome() {
               </section>
             ) : (
               <section style={{ ...card, marginTop: 22, textAlign: 'center', padding: '24px 16px' }}>
-                <div style={{ fontSize: 15, fontWeight: 800, color: TEC_COLORS.text }}>🏛️ Your organization</div>
-                <p style={{ fontSize: 13, color: TEC_COLORS.subtext, margin: '6px auto 0', maxWidth: 460, lineHeight: 1.6 }}>
-                  Sign in with Pi to load your organization, team and roles. The enterprise modules tab shows
-                  what Titan coordinates and which system owns each capability.
-                </p>
+                <div style={{ fontSize: 15, fontWeight: 800, color: TEC_COLORS.text }}>🏛️ {t.titan.orgEmpty.heading}</div>
+                {/* C10 — told "Sign in with Pi" right under "Welcome, @user". A session
+                    with no org is its own state; nothing is said until /me answers. */}
+                {!(me.loading && !user) && (
+                  <p style={{ fontSize: 13, color: TEC_COLORS.subtext, margin: '6px auto 0', maxWidth: 460, lineHeight: 1.6 }}>
+                    {signedIn ? t.titan.orgEmpty.noOrg : t.titan.orgEmpty.signedOut}
+                  </p>
+                )}
               </section>
             )}
 
