@@ -1,5 +1,7 @@
 'use client';
 
+import { SignInGate } from '@/components/pi/SignInGate';
+
 // TEC Titan — the Enterprise Operating Platform (Titan charter, draft). "How do
 // organizations operate in the Pi economy?" Titan is the B2B / institutional
 // counterpart to Life (Personal OS). Titan COORDINATES; it never holds funds
@@ -19,7 +21,7 @@ import {
   ROLE_META, MODULES, STATUS_META, type Module, type Org, type Member,
 } from '@/lib/titan/enterprise';
 
-export default function TitanHome() {
+function TitanHome() {
   const { user, isLoading } = usePiAuth();
   const me = useMe(); // server-resolved Pi username (Pi Browser hides tec_user from client JS — C-123 §3)
   const { t } = useTranslation();
@@ -173,4 +175,11 @@ export default function TitanHome() {
       <BottomNav active={tab} onSelect={setTab} />
     </main>
   );
+}
+
+// The door: a sign-in button before any screen when there is no session
+// (SignInGate — C-123 §10; owner, 2026-10-06). A visit from the Hub arrives
+// signed in (§12) and goes straight through.
+export default function TitanHomeGated() {
+  return <SignInGate><TitanHome /></SignInGate>;
 }
