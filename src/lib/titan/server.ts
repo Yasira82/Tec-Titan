@@ -2,6 +2,7 @@ import {
   MODULES, getModule,
   type Org, type VerificationStatus, type Member, type Role, type Module,
 } from './enterprise';
+import { gatewayFetch } from '@/lib/gateway-fetch';
 
 // Server-only Titan backend access (Titan charter). Calls the real Titan read-layer
 // (identity-service) via the gateway with the inter-service key, and maps the
@@ -57,7 +58,7 @@ export interface ResolvedConsole {
 export async function resolveConsole(owner: string | null): Promise<ResolvedConsole> {
   if (GW) {
     try {
-      const res = await fetch(`${GW}/api/identity/titan/console/${encodeURIComponent(owner || '-')}`, {
+      const res = await gatewayFetch(`${GW}/api/identity/titan/console/${encodeURIComponent(owner || '-')}`, {
         headers: gwHeaders(), cache: 'no-store',
       });
       if (res.ok) {
@@ -84,7 +85,7 @@ export interface ResolvedModule { module: Module | null; source: 'live' | 'catal
 export async function resolveModule(id: string): Promise<ResolvedModule> {
   if (GW) {
     try {
-      const res = await fetch(`${GW}/api/identity/titan/module/${encodeURIComponent(id)}`, {
+      const res = await gatewayFetch(`${GW}/api/identity/titan/module/${encodeURIComponent(id)}`, {
         headers: gwHeaders(), cache: 'no-store',
       });
       if (res.ok) {
