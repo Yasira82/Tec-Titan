@@ -54,8 +54,9 @@ export default function HomePage() {
           TEC ECOSYSTEM · ENTERPRISE
         </div>
         <div style={{ fontSize: 13, color: TEC_COLORS.subtext, marginBottom: 32, maxWidth: 330, lineHeight: 1.5 }}>
-          The Enterprise Operating Platform for the Pi economy — verify, manage a
-          team, and run business operations on Pi.
+          {/* The Hub registry's words (tec-app domains/_registry.ts valueProp): it said
+              "verify, manage a team, and run business operations" while none of it exists. */}
+          Preview: the map of an enterprise OS on Pi, and which system owns each part. Creating an organization is not open yet.
         </div>
         <button
           onClick={handleLogin}
