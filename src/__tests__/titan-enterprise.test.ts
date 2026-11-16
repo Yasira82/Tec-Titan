@@ -1,22 +1,22 @@
 import { describe, it, expect } from 'vitest';
 import {
-  ORG, TEAM, ROLE_META, MODULES, STATUS_META, getModule,
+  ROLE_META, MODULES, STATUS_META, getModule,
 } from '@/lib/titan/enterprise';
+import * as enterprise from '@/lib/titan/enterprise';
 
 describe('TEC Titan — Enterprise OS console (read-only)', () => {
-  it('models an organization (B2B), not an individual user', () => {
-    expect(ORG.name.length).toBeGreaterThan(0);
-    expect(ORG.members).toBeGreaterThan(1);          // multi-user, not a single user
-    expect(ORG.kind.toLowerCase()).toContain('b2b');
+  // The org and team are the person's own data and come only from the backend
+  // (server.ts). A sample org ("Acme Pi Trading Co.") and team lived here until
+  // 16 Nov 2026 — unused, and one import away from being shown as real.
+  it('ships no sample organization or team', () => {
+    expect('ORG' in enterprise).toBe(false);
+    expect('TEAM' in enterprise).toBe(false);
   });
 
-  it('has the enterprise role set (Owner/Admin/Finance/Sales/HR) with scopes', () => {
-    const roles = new Set(TEAM.map((m) => m.role));
+  it('has the enterprise role set (Owner/Admin/Finance/Sales/HR)', () => {
     for (const r of ['Owner', 'Admin', 'Finance', 'Sales', 'HR'] as const) {
-      expect(roles.has(r), r).toBe(true);
-      expect(ROLE_META[r]?.icon).toBeTruthy();
+      expect(ROLE_META[r]?.icon, r).toBeTruthy();
     }
-    for (const m of TEAM) expect(m.scope.length).toBeGreaterThan(0);
   });
 
   it('every module names the OWNING system (Titan orchestrates, never owns)', () => {
