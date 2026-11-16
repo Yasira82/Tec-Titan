@@ -78,9 +78,9 @@ export default async function ModulePage(
         </div>
 
         <p style={{ fontSize: 11, color: TEC_COLORS.subtext, margin: '20px 0 0', lineHeight: 1.5 }}>
-          Titan brings your organization together — identity, team and roles, and
-          operations in one place. Funds, commerce, assets, and verification are handled
-          securely by their dedicated systems.
+          Titan is a preview: it maps what an organization will run here and which system
+          owns each part. Creating an organization is not open yet. Funds, commerce, assets,
+          and verification stay with their dedicated systems.
         </p>
       </div>
     </main>

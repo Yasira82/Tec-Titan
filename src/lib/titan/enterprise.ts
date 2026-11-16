@@ -22,6 +22,19 @@ export interface Org {
   since:        string;
 }
 
+/**
+ * Whether an organization can be created in Titan. Not yet: the console reads an org
+ * only when the backend has one, and no screen makes one.
+ */
+export const ORG_CREATION_OPEN = false;
+
+/**
+ * Titan Enterprise is sold for "team seats, roles, branches" — none of which exists
+ * without an organization. Until 16 Nov 2026 it was sold anyway (25π) and the success
+ * screen said those were "unlocked". It goes on sale when organizations can be created.
+ */
+export const enterpriseOnSale = (): boolean => ORG_CREATION_OPEN;
+
 // ── Team roles (multi-user management) ──────────────────────────────────────
 export type Role = 'Owner' | 'Admin' | 'Finance' | 'Sales' | 'HR';
 

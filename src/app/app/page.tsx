@@ -79,6 +79,12 @@ function TitanHome() {
           {tab === 'home' && (
             <p style={{ fontSize: 14, color: TEC_COLORS.subtext, margin: '6px 0 0', lineHeight: 1.6 }}>{t.titan.subtitle}</p>
           )}
+          {/* Said before anything else: what a pioneer can and cannot do here today. */}
+          {(tab === 'home' || tab === 'modules') && (
+            <p role="note" style={{ fontSize: 13, color: TEC_COLORS.text, margin: '14px 0 0', lineHeight: 1.6, padding: '10px 12px', borderRadius: 10, border: `1px solid ${TEC_COLORS.gold}44`, background: `${TEC_COLORS.gold}0d` }}>
+              {t.titan.preview}
+            </p>
+          )}
         </header>
 
         {tab === 'home' && (
