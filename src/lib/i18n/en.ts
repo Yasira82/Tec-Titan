@@ -27,6 +27,7 @@ export const en = {
     welcome:     'Enterprise console',
     welcomeName: 'Welcome, {name}',
     subtitle:    'The Enterprise Operating Platform of TEC — organizations manage identity, team, operations, commerce, and reputation on Pi. Life is the Personal OS; Titan is the Enterprise OS.',
+    preview:     'Preview — Titan is being built. You can explore its modules and see which system owns each one; creating an organization is not open yet, and nothing here is on sale.',
     nav: { home: 'Home', modules: 'Modules', pro: 'Pro', settings: 'Settings' },
     modulesHeading: 'Enterprise modules',
     // C10 — "no session" and "no organization yet" are different states.

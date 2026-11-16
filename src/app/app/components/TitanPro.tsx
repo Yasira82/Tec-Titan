@@ -14,6 +14,7 @@ import {
   createU2APayment,
 } from '@/lib/pi-payment';
 import { CancelProButton } from '@/components/pro/CancelProButton';
+import { enterpriseOnSale } from '@/lib/titan/enterprise';
 
 const PRICE   = 25;                        // π / month
 // The PLATFORM plan this buys is PRO. "Titan Enterprise" stays the product name
@@ -163,6 +164,21 @@ export function TitanPro() {
         <div style={{ fontSize: 15, fontWeight: 800, color: TEC_COLORS.success }}>✅ Titan Enterprise active</div>
         <div style={{ fontSize: 12, color: TEC_COLORS.subtext, marginTop: 6 }}>
           Payment received. Team seats, branches, and corporate analytics unlocked 🏛️.
+        </div>
+      </div>
+    );
+  }
+
+  // Not sold while there is no organization to give seats, roles or branches to. A
+  // subscriber who already paid still sees their plan and the cancel button above.
+  if (!enterpriseOnSale()) {
+    return (
+      <div style={card}>
+        <div style={{ fontSize: 15, fontWeight: 800, color: TEC_COLORS.gold }}>🏛️ Titan Enterprise — not on sale yet</div>
+        <div style={{ fontSize: 12, color: TEC_COLORS.subtext, marginTop: 8, lineHeight: 1.6 }}>
+          Titan Enterprise is for organizations — team seats, roles and branches. Creating an
+          organization in Titan is not open yet, so there is nothing to buy today. It goes on
+          sale the day organizations can be created.
         </div>
       </div>
     );
