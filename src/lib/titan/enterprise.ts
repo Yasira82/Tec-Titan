@@ -10,7 +10,7 @@
 // → Zone/tec-kyc-service; reputation → Zone + Connection. This V1 is a curated
 // READ-ONLY console; real multi-tenant org data is Phase 1+ (needs a mature system).
 
-// ── Org profile (sample) ────────────────────────────────────────────────────
+// ── Org profile (from the backend only — never a sample) ────────────────────────────────────────────────────
 export type VerificationStatus = 'verified' | 'pending' | 'unverified';
 
 export interface Org {
@@ -22,11 +22,6 @@ export interface Org {
   since:        string;
 }
 
-export const ORG: Org = {
-  name: 'Acme Pi Trading Co.', kind: 'Company (B2B)', verification: 'verified',
-  members: 6, branches: 2, since: '2026',
-};
-
 // ── Team roles (multi-user management) ──────────────────────────────────────
 export type Role = 'Owner' | 'Admin' | 'Finance' | 'Sales' | 'HR';
 
@@ -35,14 +30,6 @@ export interface Member {
   role:   Role;
   scope:  string;   // what this role can do (server-enforced later, presented here)
 }
-
-export const TEAM: Member[] = [
-  { handle: '@founder',  role: 'Owner',   scope: 'Full control · org settings · billing' },
-  { handle: '@ops_lead', role: 'Admin',   scope: 'Manage members · workspaces · branches' },
-  { handle: '@cfo',      role: 'Finance', scope: 'Org wallet view · payments · procurement approvals' },
-  { handle: '@sales1',   role: 'Sales',   scope: 'B2B orders · customers · quotes' },
-  { handle: '@people',   role: 'HR',      scope: 'Team + roles (no finance access)' },
-];
 
 export const ROLE_META: Record<Role, { icon: string }> = {
   Owner:   { icon: '👑' },
